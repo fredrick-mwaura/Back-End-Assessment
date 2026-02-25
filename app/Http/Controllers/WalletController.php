@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Wallet;
 use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
+use App\Models\User;
 
 class WalletController extends Controller
 {
@@ -17,19 +18,21 @@ class WalletController extends Controller
 
         $wallet = Wallet::create($validated);
 
-        return response()->json($wallet, 201)->with('success', 'Wallet created successfully');
+        return response()->json($wallet, 201);
     }
 
     /**
      * @param Wallet $wallet
      * @return \Illuminate\Http\JsonResponse
      */
-    public function getWallet(Request $request, $walletId): JsonResponse
+    public function getWallet(Request $request, $walletId)
     {
         try {
 
+            //using first user since no auth
             $wallet = Wallet::where('id', $walletId)
-                ->where('user_id', $request->user()->id)->with('transactions')
+                ->where('user_id', User::first()->id)
+                ->with('transactions')
                 ->first();
 
             if (!$wallet) {

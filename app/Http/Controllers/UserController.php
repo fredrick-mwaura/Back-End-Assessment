@@ -28,10 +28,10 @@ class UserController extends Controller
         // create wallet for user on success
         $wallet = Wallet::create([
             'user_id' => $user->id,
-            'name' => 'Default Wallet'
+            'name' => 'Main Wallet'
         ]);
 
-        return response()->json([$user, $wallet], 201)->with('success', 'User created successfully');
+        return response()->json([$user, $wallet], 201);
     }
 
     /**

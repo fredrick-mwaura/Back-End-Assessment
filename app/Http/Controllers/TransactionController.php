@@ -15,7 +15,7 @@ class TransactionController extends Controller
         $validated = $request->validate([
             'wallet_id'   => 'required|exists:wallets,id',
             'type'        => 'required|in:' . implode(',', TransactionType::values()),
-            'amount'      => 'required|numeric|min:0.01',
+            'amount'      => 'required|numeric|min:1',
             'description' => 'nullable|string'
         ]);
 
