@@ -26,19 +26,26 @@ class WalletController extends Controller
      */
     public function getWallet(Request $request, $walletId): JsonResponse
     {
-        $wallet = Wallet::where('id', $walletId)
-            ->where('user_id', $request->user()->id)
-            ->first();
+        try {
 
-        if (!$wallet) {
-            return response()->json(['message' => 'Wallet not found'], 404);
+            $wallet = Wallet::where('id', $walletId)
+                ->where('user_id', $request->user()->id)->with('transactions')
+                ->first();
+
+            if (!$wallet) {
+                return response()->json(['message' => 'Wallet not found'], 404);
+            }
+
+            return response()->json([
+                'wallet' => $wallet,
+                'transactions' => $wallet->transactions
+            ], 200);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'An error occurred',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        $wallet->load('transactions');
-
-        return response()->json([
-            'wallet' => $wallet,
-            'transactions' => $wallet->transactions
-        ], 200);
     }
 }

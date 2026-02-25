@@ -16,9 +16,10 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'name'  => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email'         
+            'name'  => 'bail|required|string|max:255',
+            'email' => 'bail|required|email|unique:users,email'         
         ]);
+
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
@@ -38,8 +39,15 @@ class UserController extends Controller
      * @return JsonResponse
      */
 
-    public function getProfile(User $user): JsonResponse 
+    public function getProfile(): JsonResponse 
     {
+        //get the first user(since no auth)
+        $user = User::first();
+        
+        if (!$user) {
+            return response()->json(['message' => 'No users found'], 404);
+        }
+
         //eager load wallet
         $user->load('wallets');
 
