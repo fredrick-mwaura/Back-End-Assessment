@@ -46,8 +46,18 @@ class User extends Authenticatable
         ];
     }
 
-    public function Wallet()
+    // wallet relationship
+    public function wallets()
     {
         return $this->hasMany(Wallet::class);
+    }
+
+    /**
+     * Summary of getTotalBalanceAttribute
+     * @return mixed
+     */
+    public function getTotalBalanceAttribute()
+    {
+        return $this->wallets()->sum('balance');
     }
 }
