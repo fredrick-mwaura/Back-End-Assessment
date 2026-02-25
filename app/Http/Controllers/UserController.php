@@ -35,7 +35,7 @@ class UserController extends Controller
     }
 
     /**
-     * @string User $user
+     * @var string User $user
      * @return JsonResponse
      */
 
